@@ -19,6 +19,7 @@ class TriviaTestCase(unittest.TestCase):
             'localhost:5432', self.database_name)
         setup_db(self.app, self.database_path)
 
+        # initialize some test jsons
         self.test_question = {
             'question': 'test question',
             'answer': 'test answer',
@@ -50,6 +51,7 @@ class TriviaTestCase(unittest.TestCase):
     Write at least one test for each test for successful operation and for expected errors.
     """
 
+    # test category endpoint
     def test_categories(self):
         res = self.client().get('/categories')
         data = json.loads(res.data)
@@ -57,6 +59,7 @@ class TriviaTestCase(unittest.TestCase):
         self.assertTrue(data['success'])
         self.assertTrue(data['categories'])
 
+    # test question endpoint
     def test_questions(self):
         res = self.client().get('/questions')
         data = json.loads(res.data)
@@ -65,6 +68,7 @@ class TriviaTestCase(unittest.TestCase):
         self.assertTrue(data['questions'])
         self.assertTrue(data['total_questions'])
 
+    # test post question endpoint
     def test_post_question(self):
         res = self.client().post('/questions', json=self.test_question)
         data = json.loads(res.data)
@@ -72,6 +76,7 @@ class TriviaTestCase(unittest.TestCase):
         self.assertEqual(data['success'], True)
         self.assertTrue(data['total_questions'])
 
+    # test delete endpoint
     def test_delete_question(self):
         res = self.client().post('/questions', json=self.test_question)
         question_to_delete = json.loads(res.data)['created']
@@ -82,12 +87,14 @@ class TriviaTestCase(unittest.TestCase):
         self.assertEqual(res.status_code, 200)
         self.assertEqual(data['success'], True)
 
+    # test search endpoint
     def test_search(self):
         res = self.client().post('/questions/search', json=self.search_term)
         data = json.loads(res.data)
         self.assertEqual(res.status_code, 200)
         self.assertTrue(data['questions'])
 
+    # test quiz endpoint
     def test_quiz(self):
         res = self.client().post('/quizzes', json=self.test_quiz)
         data = json.loads(res.data)

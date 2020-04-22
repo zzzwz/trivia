@@ -39,6 +39,7 @@ def create_app(test_config=None):
     '''
     @app.route('/categories', methods=['GET'])
     def get_category():
+        # get all categories
         categories = Category.query.order_by(Category.id).all()
 
         return jsonify({
@@ -60,6 +61,8 @@ def create_app(test_config=None):
     '''
     @app.route('/questions', methods=['GET'])
     def get_question():
+        # get all categories and questions
+
         questions = Question.query.order_by(Question.id).all()
         categories = Category.query.order_by(Category.id).all()
         category_l = [category.format() for category in categories]
@@ -92,6 +95,7 @@ def create_app(test_config=None):
 
     @app.route('/questions/<int:question_id>', methods=['DELETE'])
     def delete_question(question_id):
+        # get question
         question = Question.query.filter(
             Question.id == question_id).one_or_none()
         try:
@@ -118,6 +122,7 @@ def create_app(test_config=None):
     '''
     @app.route('/questions', methods=['POST'])
     def create_question():
+        # init question to be inserted
         d = request.get_json()
         question = d.get('question')
         answer = d.get('answer')
@@ -152,7 +157,6 @@ def create_app(test_config=None):
     @app.route('/questions/search', methods=['POST'])
     def search():
         term = request.get_json().get('searchTerm', None)
-
         try:
             questions = Question.query.filter(
                 Question.question.ilike("%" + term + "%")).all()
@@ -201,6 +205,8 @@ def create_app(test_config=None):
     '''
     @app.route('/quizzes', methods=['POST'])
     def quiz():
+
+        # set up quiz
         d = request.get_json()
         previous_question = d['previous_questions']
         print(previous_question)
@@ -240,6 +246,7 @@ def create_app(test_config=None):
     including 404 and 422.
     '''
 
+    # error handlers
     @app.errorhandler(404)
     def not_found(error):
         return jsonify({
